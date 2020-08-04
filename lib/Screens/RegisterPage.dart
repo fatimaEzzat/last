@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:loginregister/LoginPage.dart';
-
+import 'customdropdownlist.dart';
 class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  String selectedAccount="";
+  List<String> types=['Doctor','Student'];
+  final select=TextEditingController();
   var _obSecure = true;
 
   void onHideSecure() {
@@ -72,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               children: <Widget>[
                                 TextFormField(
                                   decoration: InputDecoration(
-                                    hintText: 'Nama Lengkap',
+                                    hintText: 'First Name',
                                   ),
                                 ),
                                 Padding(
@@ -80,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
-                                      hintText: 'Username'
+                                      hintText: 'Full Name'
                                   ),
                                 ),
                                 Padding(
@@ -88,13 +91,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
-                                      hintText: 'Email/No.Telp'
+                                      hintText: 'Email'
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 10),
                                 ),
-                                TextFormField(
+
+
+                               TextFormField(
                                   obscureText: _obSecure,
                                   decoration: InputDecoration(
                                       hintText: 'Password',
@@ -108,7 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         },
                                       )
                                   ),
-                                ),
+                             ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 10),
                                 ),
@@ -127,9 +132,25 @@ class _RegisterPageState extends State<RegisterPage> {
                                       )
                                   ),
                                 ),
+                              CustomDropList(
+                                controller: select,
+                                hint: 'Select Account Type',
+
+                                accountTypes: types,
+                                onChange: (value){
+                                  setState(() {
+                                    selectedAccount=value;
+                                  });
+
+                                },
+
+
+                              ),
+
                                 Padding(
                                   padding: const EdgeInsets.only(top: 20),
                                 ),
+
                                 RaisedButton(
                                   onPressed: () {
                                     Navigator.push(context, MaterialPageRoute(
@@ -155,3 +176,4 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 }
+

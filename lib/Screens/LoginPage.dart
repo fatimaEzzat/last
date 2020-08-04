@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:loginregister/RegisterPage.dart';
+import 'lettercontainer.dart';
+import 'constants.dart';
+import 'constants.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -39,24 +42,17 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top: 100, left: 10),
+                        padding: KcolumPadding,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
                             Text(
                               'Hello,',
-                              style: TextStyle(
-                                fontSize: 50,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                              style: KBigTitleStyle,
                             ),
                             Text(
                               'Welcome in My Apps,',
-                              style: TextStyle(
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                              style:KTitleDescriptionStyle,
                             ),
                           ],
                         ),
@@ -65,46 +61,16 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.only(top: 70, left: 105),
                         child: Row(
                           children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(left: 2, right: 2),
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 35,
-                              color: Colors.blue,
-                              child: Text('L', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 2, right: 2),
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 35,
-                              color: Colors.blue,
-                              child: Text('O', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 2, right: 2),
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 35,
-                              color: Colors.blue,
-                              child: Text('G', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 2, right: 2),
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 35,
-                              color: Colors.blue,
-                              child: Text('I', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 2, right: 2),
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 35,
-                              color: Colors.blue,
-                              child: Text('N', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),),
-                            ),
+                            LetterContainer(
+                              letter:'L' ,),
+                            LetterContainer(
+                              letter:'O' ,),
+                            LetterContainer(
+                              letter:'G' ,),
+                            LetterContainer(
+                              letter:'I' ,),
+                            LetterContainer(
+                              letter:'N' ,),
                           ],
                         ),
                       ),
@@ -120,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                                   TextFormField(
                                     style: TextStyle(color: Colors.blue),
                                     decoration: InputDecoration(
-                                        hintText: 'Email/No.Telp',
+                                        hintText: 'Email',
                                         hintStyle: TextStyle(
                                           color: Colors.blue,
                                         ),
@@ -137,8 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(color: Colors.blue),
                                     decoration: InputDecoration(
                                         hintText: 'Password',
-                                        hintStyle:
-                                        TextStyle(color: Colors.blue),
+                                        hintStyle:KhintStyle,
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                             _obSecure
