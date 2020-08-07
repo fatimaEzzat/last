@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter/widgets.dart';
+
 class Classroom {
   final int classroomId;
   final String accessCode;
@@ -15,4 +18,4 @@ class Classroom {
     @required this.classroomSection,
     @required this.classroomShift,
   });
-}
+ }

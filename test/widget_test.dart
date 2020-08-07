@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:loginregister/LoginPage.dart';
+import 'file:///C:/Users/hp/AndroidStudioProjects/LoginRegisterPage/lib/Screens/LoginPage.dart';
 
 import 'package:loginregister/main.dart';
 

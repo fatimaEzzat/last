@@ -1,11 +1,9 @@
+import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:loginregister/models/classroom.dart';
-import 'package:random_string/random_string.dart';
-import 'package:provider/provider.dart';
 import 'package:loginregister/models/classroom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:random_string/random_string.dart';
+
 class Classrooms with ChangeNotifier {
   /*
   ** @classrooms : a getter that returns the copied
@@ -14,6 +12,7 @@ class Classrooms with ChangeNotifier {
   List<Classroom> get classrooms {
     // Copy and sort by descending
     final baseClasses = [..._classrooms];
+
     baseClasses.sort((b, a) => a.classroomId.compareTo(b.classroomId));
     return baseClasses;
   }
@@ -23,7 +22,7 @@ class Classrooms with ChangeNotifier {
   }
 
   Future<void> fetchAndSetClassroom() async {
-    var classes = [classrooms];
+    var classes = [...classrooms];
     notifyListeners();
   }
 
