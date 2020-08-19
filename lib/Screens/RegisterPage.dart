@@ -1,20 +1,78 @@
 import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
+import 'package:loginregister/models/UserAccount.dart';
+import 'package:loginregister/providers/UserAccounts.dart';
+import 'package:provider/provider.dart';
 import 'file:///C:/Users/hp/AndroidStudioProjects/LoginRegisterPage/lib/Screens/LoginPage.dart';
 import '../components/customdropdownlist.dart';
 import 'doctor_home_page.dart';
+import 'package:loginregister/Screens/student_home_screen.dart';
 
 class RegisterPage extends StatefulWidget {
+  static const routeName = '/register';
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  Map _selectedUserMap = {
+    'id': -1,
+    'name': '',
+    'email': '',
+    'password': '',
+    'confimation': '',
+    'type': '',
+  };
+  var _isInit = true;
   String selectedAccount = "";
   List<String> types = ['Doctor', 'Student'];
   final select = TextEditingController();
   var _obSecure = true;
   final _formState = GlobalKey<FormState>();
+  var _user =
+      UserAccount(userFullName: '', userEmail: '', userPassword: '', Type: '');
+  final _passwordController = TextEditingController();
+
+  creatDialog(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      title: Text('This account is already exist!'),
+      actions: <Widget>[
+        new FlatButton(
+          child: new Text('OK'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ],
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isInit) {
+      final selectedUserId =
+          ModalRoute.of(context).settings.arguments as String;
+      if (selectedUserId != null) {
+        final selectedUser =
+            Provider.of<UserAccounts>(context).findById(selectedUserId);
+
+        _selectedUserMap['id'] = selectedUser.user_id;
+        _selectedUserMap['name'] = selectedUser.userFullName;
+        _selectedUserMap['email'] = selectedUser.userEmail;
+        _selectedUserMap['password'] = selectedUser.userPassword;
+        _selectedUserMap['confirmation'] = selectedUser.userConfirmPassword;
+        _selectedUserMap['type'] = selectedUser.Type;
+      } else {
+        _selectedUserMap['grade'] = "Pre";
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   //creat account functionality.
   void creatAccount() {
@@ -23,8 +81,23 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
     _formState.currentState.save();
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
+    if (_selectedUserMap['id'] == -1) {
+      Provider.of<UserAccounts>(
+        context,
+        listen: false,
+      ).addUser(_selectedUserMap);
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => creatDialog(context),
+      );
+    }
+    if (selectedAccount == 'Doctor') {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+    } else {
+      Navigator.of(context).pushNamed(StudentHomePage.routeName);
+    }
   }
 
 //check state of pass word hidden or not.
@@ -133,6 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     padding: const EdgeInsets.only(top: 10),
                                   ),
                                   TextFormField(
+                                    controller: _passwordController,
                                     obscureText: _obSecure,
                                     decoration: InputDecoration(
                                         hintText: 'Password',
@@ -150,7 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     textInputAction: TextInputAction.next,
                                     validator: (value) {
                                       if (value.isEmpty) {
-                                        return 'Please, Enter Email ';
+                                        return 'Please, Enter password ';
                                       } else {
                                         return null;
                                       }
@@ -176,8 +250,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         )),
                                     textInputAction: TextInputAction.next,
                                     validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Please, Enter Email ';
+                                      if (value != _passwordController.text) {
+                                        return 'Please, It does not match ';
                                       } else {
                                         return null;
                                       }
@@ -186,7 +260,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10),
                                   ),
-                                   TextFormField(
+                                  TextFormField(
                                     controller: select,
                                     decoration: InputDecoration(
                                       hintText: 'Enter Account type',
@@ -194,7 +268,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         icon: const Icon(Icons.arrow_drop_down),
                                         onSelected: (String value) {
                                           select.text = value;
-                                          selectedAccount=value;
+                                          selectedAccount = value;
                                         },
                                         itemBuilder: (BuildContext context) {
                                           return types
@@ -215,9 +289,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         return null;
                                       }
                                     },
-
-                                 ),
-
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 20),
                                   ),

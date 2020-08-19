@@ -1,14 +1,21 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
 import 'package:loginregister/models/classroom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:random_string/random_string.dart';
+import 'package:convert/convert.dart';
 
+import '../general.dart';
 class Classrooms with ChangeNotifier {
   /*
   ** @classrooms : a getter that returns the copied
   ** data from the list annotated as _classrooms from API
    */
+  List<Classroom> _classrooms = [
+
+  ];
   List<Classroom> get classrooms {
     // Copy and sort by descending
     final baseClasses = [..._classrooms];
@@ -17,59 +24,111 @@ class Classrooms with ChangeNotifier {
     return baseClasses;
   }
 
-  Classroom findById(int id) {
+  Classroom findById(String id) {
     return _classrooms.firstWhere((classroom) => classroom.classroomId == id);
   }
 
   Future<void> fetchAndSetClassroom() async {
-    var classes = [...classrooms];
+    var url = 'https://attendance-3561f.firebaseio.com/classes.json';
+    try {
+      final response = await http.get(url);
+
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+print(extractedData);
+
+      List<Classroom> loadedProducts = [];
+      extractedData.forEach((classId, classData) {
+        loadedProducts.add(Classroom(
+            classroomId: classId,
+        accessCode: classData['accessCode'],
+        enrolledTotal: classData['enrolledTotal'],
+        classroomShift:classData['classroomShift'],
+        classroomSection:classData['classroomSection'],
+        classroomTitle:classData['classroomTitle'],
+          lec_num: classData['lectures'],
+        ));
+      });
+      _classrooms = loadedProducts;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+
     notifyListeners();
   }
+Future<void> addUserToClass(classId) async{
+  var url = 'https://attendance-3561f.firebaseio.com/$classId.json';
+  try{
+    var response = await http.post(url,body:{
+   'name': user.userFullName,
+   'userEmail' :user.userEmail,
+   'userPassword' :user.userPassword,
+    'title':user.Type,
+    });
+  }catch(e){
 
-  void addClassroom(Map filteredClassroom) {
+  }
+}
+  Future<void> addClassroom(Map filteredClassroom) async{
+   var url = 'https://attendance-3561f.firebaseio.com//classes.json';
     try {
       final indexToSet = _classrooms.length;
       final accessCodeToSet = randomAlphaNumeric(6);
       final enrolledStudentToSet = 0;
+      var response = await http.post(url,body: json.encode({
+        'classroomId': indexToSet,
+        'accessCode': accessCodeToSet,
+        'enrolledTotal': enrolledStudentToSet,
+        'classroomShift': filteredClassroom['shift'],
+        'classroomSection': filteredClassroom['section'],
+        'classroomTitle': filteredClassroom['title'],
+        'lectures':filteredClassroom['lec_num'],
+      })).then((response){
 
-      final classroom = Classroom(
-        classroomId: indexToSet,
+        _classrooms.add(
+        Classroom(
+        classroomId: json.decode(response.body)["name"],
         accessCode: accessCodeToSet,
         enrolledTotal: enrolledStudentToSet,
         classroomShift: filteredClassroom['shift'],
         classroomSection: filteredClassroom['section'],
         classroomTitle: filteredClassroom['title'],
-      );
+          lec_num: filteredClassroom['lec_num'],
+        )
+        );
+      });
 
-      _classrooms.add(classroom);
       notifyListeners();
     } catch (errorValue) {
       print(errorValue);
     }
   }
 
-  void updateClassroom(Map filteredClassroom) {
-    try {
-      final classroomId = _classrooms
-          .firstWhere((c) => c.classroomId == filteredClassroom['id']).classroomId;
+  Future<void> updateClassroom(Classroom newClass,id) async{
+    final prodIndex = _classrooms.indexWhere((prod) => prod.classroomId == id);
+    if (prodIndex >= 0) {
+      final url =
+          "https://attendance-3561f.firebaseio.com//products/$id.json";
+      await http.patch(url,
+          body: json.encode({
+            "classroomTitle": newClass.classroomTitle,
+            "enrolledTotal": newClass.enrolledTotal,
+            "classroomSection": newClass.classroomSection,
+            "classroomShift":newClass.classroomShift,
+          }));
 
-      final updatedClassroom = Classroom(
-        classroomId: classroomId,
-        classroomTitle: filteredClassroom['title'],
-        classroomSection: filteredClassroom['section'],
-        classroomShift: filteredClassroom['shift'],
-        enrolledTotal: filteredClassroom['enrolled'],
-        accessCode: filteredClassroom['code'],
-      );
-
-      _classrooms[classroomId] = updatedClassroom;
+      _classrooms[prodIndex] = newClass;
       notifyListeners();
-    } catch (error) {
-      print(error);
+    } else {
+      print("Failure !!!");
     }
+
   }
 
-  String removeClassroom(int classroomId) {
+  String removeClassroom(String classroomId) {
     var message = "Class deleted successfully";
     try {
       _classrooms.removeWhere((c) => c.classroomId == classroomId);
@@ -80,54 +139,5 @@ class Classrooms with ChangeNotifier {
     return message;
   }
 
-  List<Classroom> _classrooms = [
-    Classroom(
-      classroomId: 0,
-      classroomTitle: 'Dhaka College (HSC): Physics-I',
-      classroomSection: 'A',
-      classroomShift: 'Morning',
-      accessCode: 'neqy71',
-      enrolledTotal: 21,
-    ),
-    Classroom(
-      classroomId: 1,
-      classroomTitle: 'Govt. Science College: Physics-II',
-      classroomSection: 'B',
-      classroomShift: 'Day',
-      accessCode: '9xmHaq',
-      enrolledTotal: 29,
-    ),
-    Classroom(
-      classroomId: 2,
-      classroomTitle: 'Dhaka Residential: Physics-II',
-      classroomSection: 'F',
-      classroomShift: 'Day',
-      accessCode: 'S5f1f5',
-      enrolledTotal: 33,
-    ),
-    Classroom(
-      classroomId: 3,
-      classroomTitle: 'City College: Physics-I',
-      classroomSection: 'B',
-      classroomShift: 'Day',
-      accessCode: 'Dxd54d',
-      enrolledTotal: 70,
-    ),
-    Classroom(
-      classroomId: 4,
-      classroomTitle: 'Holy Cross College: Physics-I',
-      classroomSection: 'A',
-      classroomShift: 'Morning',
-      accessCode: 'es4Q8s',
-      enrolledTotal: 65,
-    ),
-    Classroom(
-      classroomId: 5,
-      classroomTitle: 'Scholastica: Physics-I',
-      classroomSection: 'C',
-      classroomShift: 'Morning',
-      accessCode: '45d56x',
-      enrolledTotal: 65,
-    ),
-  ];
+
 }
