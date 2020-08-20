@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ClassroomItems extends StatefulWidget {
-  final int id;
+  final String id;
   final String title;
   final String section;
   final String shift;

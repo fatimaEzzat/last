@@ -1,6 +1,8 @@
 import 'package:loginregister/Screens/doctor_home_page.dart';
 import 'package:loginregister/Screens/modify_classes.dart';
 import 'package:flutter/material.dart';
+import 'package:loginregister/Screens/doctor_home_page.dart';
+import 'package:loginregister/Screens/profile.dart';
 
 class DrawerWidget extends StatelessWidget {
   Widget buildListTile({
@@ -40,7 +42,7 @@ class DrawerWidget extends StatelessWidget {
             alignment: Alignment.centerLeft,
             color: Theme.of(context).primaryColor,
             child: Text(
-              'eLuminous 2.0',
+              'Collage App',
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 30.0,
@@ -53,8 +55,8 @@ class DrawerWidget extends StatelessWidget {
             title: 'Classrooms',
             icon: Icons.assignment_ind,
             tapHandler: () {
-//              Navigator.of(context)
-//                  .pushReplacementNamed(ClassroomScreen.routeName);
+              Navigator.of(context)
+                  .pushReplacementNamed(HomePage.routeName);
             },
             context: context,
             iconColor: Colors.green,
@@ -73,6 +75,8 @@ class DrawerWidget extends StatelessWidget {
             title: 'My profile',
             icon: Icons.face,
             tapHandler: () {
+              Navigator.of(context).pushNamed(Profile.routeName);
+
             },
             context: context,
             iconColor: Colors.green,

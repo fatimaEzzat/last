@@ -2,6 +2,7 @@ import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
 import 'package:loginregister/models/UserAccount.dart';
 import 'package:loginregister/providers/UserAccounts.dart';
+import 'package:loginregister/providers/classrooms.dart';
 import 'package:provider/provider.dart';
 import 'file:///C:/Users/hp/AndroidStudioProjects/LoginRegisterPage/lib/Screens/LoginPage.dart';
 import '../components/customdropdownlist.dart';
@@ -59,7 +60,6 @@ class _RegisterPageState extends State<RegisterPage> {
       if (selectedUserId != null) {
         final selectedUser =
             Provider.of<UserAccounts>(context).findById(selectedUserId);
-
         _selectedUserMap['id'] = selectedUser.user_id;
         _selectedUserMap['name'] = selectedUser.userFullName;
         _selectedUserMap['email'] = selectedUser.userEmail;
@@ -67,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _selectedUserMap['confirmation'] = selectedUser.userConfirmPassword;
         _selectedUserMap['type'] = selectedUser.Type;
       } else {
-        _selectedUserMap['grade'] = "Pre";
+//        _selectedUserMap['grade'] = "Pre";
       }
     }
     _isInit = false;
@@ -82,10 +82,10 @@ class _RegisterPageState extends State<RegisterPage> {
     }
     _formState.currentState.save();
     if (_selectedUserMap['id'] == -1) {
-      Provider.of<UserAccounts>(
+      Provider.of<Classrooms>(
         context,
         listen: false,
-      ).addUser(_selectedUserMap);
+      ).addUserToClass('2');
     } else {
       showDialog(
         context: context,

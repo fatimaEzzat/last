@@ -4,7 +4,6 @@ import 'package:loginregister/Screens/modify_classes.dart';
 import 'package:loginregister/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:loginregister/providers/classrooms.dart';
-import 'package:loginregister/models/classroom.dart';
 import 'package:loginregister/components/Classroom_Items.dart';
 import 'dart:async';
 enum AppBarAction {
@@ -14,9 +13,11 @@ enum AppBarAction {
 
 
 class HomePage extends StatefulWidget {
+  static const routeName = '/classroom';
   @override
   _DoctorHomePageState createState() => _DoctorHomePageState();
 }
+
 
 class _DoctorHomePageState extends State<HomePage> {
   var _isInit = true;
@@ -38,11 +39,21 @@ class _DoctorHomePageState extends State<HomePage> {
   }
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      triggerProgressIndicator();
-    }
-    _isInit = false;
     super.didChangeDependencies();
+
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Classrooms>(context).fetchAndSetClassroom().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+      setState(() {
+        _isInit = false;
+      });
+    }
   }
 
   @override
@@ -50,9 +61,7 @@ class _DoctorHomePageState extends State<HomePage> {
   final classes = Provider.of<Classrooms>(context).classrooms;
     return Scaffold(
 
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.blue,
           title: Text(
             'College App',
@@ -87,7 +96,7 @@ class _DoctorHomePageState extends State<HomePage> {
                     Text('Refresh'),
                   ],
                 ),
-//                  value: AppBarAction.Refresh,
+                  value: AppBarAction.Refresh,
               ),
               PopupMenuItem(
                 child: Row(
@@ -102,22 +111,22 @@ class _DoctorHomePageState extends State<HomePage> {
                     Text('Send Feedback'),
                   ],
                 ),
-//                  value: AppBarAction.Feedback,
+                  value: AppBarAction.Feedback,
               ),
             ],
-//              onSelected: (value) {
-//                if (value == AppBarAction.Refresh) {
-//                  triggerProgressIndicator();
-//                }
-//              },
+              onSelected: (value) {
+                if (value == AppBarAction.Refresh) {
+                  triggerProgressIndicator();
+                }
+              },
           ),
         ],
       ),
-    )
-    ,
+
     body:_isLoading?
         Center(
       child: CircularProgressIndicator(
+
         strokeWidth: 5.0,
       ),
     ):
@@ -125,7 +134,7 @@ class _DoctorHomePageState extends State<HomePage> {
       backgroundColor: Colors.grey[800],
       color: Colors.orangeAccent,
       onRefresh: () => _refreshClasses(context),
-      child: ListView.builder(
+      child:  ListView.builder(
         itemCount: classes.length,
         itemBuilder: (ctx, index) => ClassroomItems(
           id: classes[index].classroomId,
@@ -134,6 +143,7 @@ class _DoctorHomePageState extends State<HomePage> {
           accessCode: classes[index].accessCode,
           enrolledTotal: classes[index].enrolledTotal,
           shift: classes[index].classroomShift,
+          lectures: classes[index].lec_num,
         ),
       ),
     ),

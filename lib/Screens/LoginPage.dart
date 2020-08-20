@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/hp/AndroidStudioProjects/LoginRegisterPage/lib/Screens/RegisterPage.dart';
+import 'package:loginregister/Screens/RegisterPage.dart';
 import '../components/lettercontainer.dart';
 import '../constants.dart';
 import 'doctor_home_page.dart';
-import 'file:///C:/Users/hp/AndroidStudioProjects/LoginRegisterPage/lib/models/userlogin.dart';
+import 'package:loginregister/models/userlogin.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,8 +22,19 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     _formState.currentState.save();
-    Navigator.push(context, MaterialPageRoute(
-        builder: (context) => HomePage()));
+    Navigator.of(context).pushNamed(HomePage.routeName);
+//    Navigator.push(context, MaterialPageRoute(
+//        builder: (context) => HomePage()));
+  }
+  void authenticate1() {
+    final isValid = _formState.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    _formState.currentState.save();
+
+//    Navigator.push(context, MaterialPageRoute(
+//        builder: (context) => HomePage()));
   }
 
   void onHideSecure() {
@@ -213,12 +225,8 @@ class _LoginPageState extends State<LoginPage> {
                                       padding: const EdgeInsets.only(top: 10),
                                     ),
                                     FlatButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegisterPage()));
+                                      onPressed:(){
+                                        Navigator.of(context).pushNamed(RegisterPage.routeName);
                                       },
                                       color: Colors.blue,
                                       child: Text(

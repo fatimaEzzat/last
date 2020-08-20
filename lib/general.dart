@@ -1,3 +1,3 @@
-import 'models/userlogin.dart';
+import 'package:loginregister/models/UserAccount.dart';
 
-var user = UserLogin(name: '',userEmail: '',userPassword: '',title: '');
+var user = UserAccount(userFullName: '',userEmail: '',userPassword: '',Type: '' );

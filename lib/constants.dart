@@ -46,6 +46,12 @@ const kSansRadio = TextStyle(
   fontFamily: 'Sans',
   fontSize: 18.0,
 );
+const kActiveCardColor = Color(0xFF1D1F33);
+const KTextStyle=TextStyle(
+fontFamily: 'Sans',
+fontSize: 16.0,
+fontWeight: FontWeight.bold,
+);
 
 
 

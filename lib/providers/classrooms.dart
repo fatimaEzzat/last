@@ -16,9 +16,31 @@ class Classrooms with ChangeNotifier {
   List<Classroom> _classrooms = [
 
   ];
+  List<Classroom> _classrooms_student = [
+    Classroom(
+      classroomId: '5',
+      classroomTitle: 'software',
+      classroomSection: 'java',
+      classroomShift: 'Morning',
+      classroomYear: ' 1 st',
+      lec_num: '10',
+      accessCode: 'AWDLSL',
+      qr_text: 'assaa',
+      enrolledTotal: 10,
+
+    ),
+  ];
+
   List<Classroom> get classrooms {
     // Copy and sort by descending
     final baseClasses = [..._classrooms];
+
+    baseClasses.sort((b, a) => a.classroomId.compareTo(b.classroomId));
+    return baseClasses;
+  }
+  List<Classroom> get classrooms_student {
+    // Copy and sort by descending
+    final baseClasses = [..._classrooms_student];
 
     baseClasses.sort((b, a) => a.classroomId.compareTo(b.classroomId));
     return baseClasses;
@@ -27,6 +49,10 @@ class Classrooms with ChangeNotifier {
   Classroom findById(String id) {
     return _classrooms.firstWhere((classroom) => classroom.classroomId == id);
   }
+  Classroom findByIdSt(String id) {
+    return _classrooms_student.firstWhere((classroom) => classroom.classroomId == id);
+  }
+
 
   Future<void> fetchAndSetClassroom() async {
     var url = 'https://attendance-3561f.firebaseio.com/classes.json';
